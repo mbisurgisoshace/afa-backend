@@ -12,6 +12,77 @@ enum Role {
   ADMIN
 }
 
+enum TipoPersonaInteres {
+  PRESIDENTE                     @map("Presidente")
+  SOCIO_GERENTE                  @map("Socio Gerente")
+  DIRECTOR                       @map("Director")
+  APODERADO                      @map("Apoderado")
+  REPRESENTANTE_LEGAL            @map("Representante Legal")
+  SOCIO                          @map("Socio")
+  EMPLEADO_EX_AFA                @map("Empleado Ex AFA")
+  EX_EMPLEADO_ACTUAL_AFA         @map("Ex Empleado Actual AFA")
+  FAMILIAR_COMUN_AFA_ENTIDAD     @map("Familiar Comun AFA Entidad")
+  PERSONAL_INTERES_ECONOMICO_AFA @map("Personal Interes Economico AFA")
+}
+
+enum TipoDocumento {
+  DNI                  @map("DNI")
+  DU                   @map("DU")
+  CI                   @map("CI")
+  LIBRETA_ENROLAMIENTO @map("Libreta Enrolamiento")
+  PASAPORTE            @map("Pasaporte")
+}
+
+enum TipoDocumentoAfip {
+  CUIT
+  CUIL
+}
+
+enum TipoRelacion {
+  PROVEDOOR
+  SPONSOR
+  AGENTE_COMERCIAL
+  CLUB
+}
+
+enum TipoActividad {
+  COMERCIAL
+  INDUSTRIAL
+}
+
+enum CondicionIva {
+  RESPONSABLE_INSCRIPTO
+}
+
+enum TipoEntidad {
+  HUMANA
+  JURIDICA
+  ORGANISMO_PUBLICO
+  OTROS
+}
+
+enum TipoCuentaBancaria {
+  CAJA_AHORRO_PESOS
+  CUENTA_CORRIENTE_PESOS
+  CUENTA_UNICA
+  CAJA_AHORRO_DOLARES
+  CUENTA_CORRIENTE_DOLARES
+  OTRA
+}
+
+enum TipoSocietario {
+  SOCIEDAD_ANONIMA
+}
+
+enum Sexo {
+  MASCULINO
+  FEMENINO
+}
+
+enum EstadoCivil {
+  SOLTERO_A
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
@@ -23,4 +94,104 @@ model User {
   updatedAt DateTime @updatedAt
 
   @@map("Users")
+}
+
+model Entidad {
+  id                                      Int                @id @default(autoincrement())
+  codigoEntidad                           String
+  fecha                                   DateTime
+  tipoRelacion                            TipoRelacion
+  tipoActividad                           TipoActividad
+  condicionIva                            CondicionIva
+  codigoActividadAfip                     String
+  tipoIndustria                           String
+  ingresosEnPesos                         Decimal
+  fechaCierrePesos                        DateTime
+  tipoEntidad                             TipoEntidad
+  direccion                               String
+  ciudad                                  String
+  estado                                  String
+  codigoPostal                            String
+  pais                                    String
+  telefono                                String
+  email                                   String
+  contactoAfa                             String
+  bancoCuentaBancaria                     String
+  titularCuentaBancaria                   String
+  sucursalCuentaBancaria                  String
+  numeroCuentaBancaria                    String
+  tipoCuentaBancaria                      TipoCuentaBancaria
+  cbu                                     String
+  alias                                   String?
+  tieneOficinasExterior                   Boolean
+  oficinasExterior                        String[]
+  tieneOperacionesExterior                Boolean
+  operacionesExterior                     String[]
+  montoOperacionesExterior                Decimal?
+  fechaCierrePesosExterior                DateTime?
+  porcentajeExportacionVsTotal            Decimal?
+  nombre                                  String?
+  segundoNombre                           String?
+  apellido                                String?
+  nacionalidad                            String?
+  tipoDocumento                           TipoDocumento?
+  dni                                     String?
+  tipoDocumentoAfip                       TipoDocumentoAfip?
+  sexo                                    Sexo?
+  estadoCivil                             EstadoCivil?
+  fechaNacimiento                         DateTime?
+  paisNacimiento                          String?
+  profesion                               String?
+  expuestaPoliticamente                   Boolean
+  archivoDDJJPep                          String?
+  cuit                                    String?
+  conflictoInteresEmpleadosAfa            Boolean
+  descripcionConflictoInteresEmpleadosAfa String?
+  empleadoActualExAfa                     Boolean
+  exEmpleadoActualAfa                     Boolean
+  familiarComunAfaEntidad                 Boolean
+  personalConInteresEconomicoAfa          Boolean
+  razonSocial                             String?
+  tipoSocietario                          TipoSocietario?
+  fechaConstitucionSociedad               DateTime?
+  fechaInscripcionRpc                     DateTime?
+  datosInscripcionRegistrales             String?
+  archivoEstatuto                         String?
+  cotizaEnBolsa                           Boolean?
+  dondeCotiza                             String[]
+  esSujetoObligado                        Boolean?
+  razonSujetoObligado                     String?
+  tieneProgramaPrevencion                 Boolean
+  archivoProgramaPrevencion               String?
+  tieneProgramaIntegridad                 Boolean
+  archivoProgramaIntegridad               String?
+  personasInteres                         PersonaInteres[]
+  archivoFormularioDDJJ                   String?
+  createdAt                               DateTime           @default(now())
+  updatedAt                               DateTime           @updatedAt
+
+  @@map("Entidades")
+}
+
+model PersonaInteres {
+  id                    Int                @id @default(autoincrement())
+  tipo                  TipoPersonaInteres
+  nombreApellido        String
+  tipoDocumento         TipoDocumento
+  documento             String
+  telefono              String
+  email                 String?
+  porcentajeAccionario  Decimal?
+  expuestaPoliticamente Boolean
+  archivoDDJJPep        String?
+  archivoPoder          String?
+  cargoEnAfa            String?
+  fechaCargoEnAfa       DateTime?
+  tipoInteresAfa        String
+  entidad               Entidad            @relation(fields: [entidadId], references: [id])
+  entidadId             Int
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+
+  @@map("PersonasInteres")
 }

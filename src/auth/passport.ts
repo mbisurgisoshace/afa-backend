@@ -16,7 +16,7 @@ const options = {
 };
 
 export interface AuthorizedRequest extends Request {
-  authenticatedUser: User;
+  authenticatedUser?: User;
 }
 export interface PassportUser {
   rol: Role;
@@ -94,7 +94,7 @@ function decodeToken(token: string) {
 }
 
 export async function isAuthenticated(
-  req: Request,
+  req: AuthorizedRequest,
   res: Response,
   next: NextFunction
 ) {
@@ -122,7 +122,7 @@ export async function isAuthenticated(
       });
     }
 
-    req.user = user;
+    req.authenticatedUser = user;
     next();
   } catch (err) {
     console.log("err", err);
@@ -135,11 +135,11 @@ export async function isAuthenticated(
 }
 
 export async function isAdminUser(
-  req: Request,
+  req: AuthorizedRequest,
   res: Response,
   next: NextFunction
 ) {
-  const user = req.user as User;
+  const user = req.authenticatedUser!;
 
   if (user.rol !== "ADMIN")
     return res.status(401).json({

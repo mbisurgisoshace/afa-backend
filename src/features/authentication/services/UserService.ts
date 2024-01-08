@@ -9,6 +9,15 @@ const prisma = new PrismaClient();
 export default class UserService {
   constructor() {}
 
+  public async getUsers(): Promise<User[]> {
+    try {
+      const users = await prisma.user.findMany();
+      return users;
+    } catch (err) {
+      throw err;
+    }
+  }
+
   public async createUser(newUser: NewUser): Promise<Partial<User>> {
     const { email, nombre, apellido, rol, password } = newUser;
 
